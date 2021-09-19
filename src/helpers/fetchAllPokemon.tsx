@@ -26,6 +26,7 @@ const transformSmallPokemonIntoPokemon = (
     // console.log(pokeArr);
     const id = pokeArr[6];
     const pic = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+
     return {
       id: id,
       pic: pic,
@@ -33,7 +34,7 @@ const transformSmallPokemonIntoPokemon = (
     };
   });
 
-  console.log(pokemonArr);
+  // console.log(pokemonArr);
 
   return pokemonArr;
 };
