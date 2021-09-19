@@ -4,11 +4,46 @@ import { Loading } from "../components/Loading";
 import { Pokemon } from "../interfaces/fetchAllPokemonResponse";
 import DataTable from "react-data-table-component";
 
+const FilterComponent = ({ filterText, onFilter, onClear }: any) => (
+  <>
+    <input
+      id="search"
+      type="text"
+      placeholder="Filter By Name"
+      aria-label="Search Input"
+      value={filterText}
+      onChange={onFilter}
+    />
+    <button type="button" onClick={onClear}>
+      X
+    </button>
+  </>
+);
+
 export const HomePage = () => {
   /* 
     DATA TABLE REACT FILTERING
   */
+  const [filterText, setFilterText] = React.useState("");
+  const [resetPaginationToggle, setResetPaginationToggle] =
+    React.useState(false);
 
+  const subHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle);
+        setFilterText("");
+      }
+    };
+
+    return (
+      <FilterComponent
+        onFilter={(e: any) => setFilterText(e.target.value)}
+        onClear={handleClear}
+        filterText={filterText}
+      />
+    );
+  }, [filterText, resetPaginationToggle]);
   /* 
     DATA TABLE REACT FILTERING FIN
   */
@@ -81,16 +116,17 @@ export const HomePage = () => {
   // Buscador
   const [search, setSearch] = useState("");
 
-  const filteredPokemon = (): Pokemon[] => {
-    // filtrode busqueda
-    if (search.length === 0)
-      return pokemons.slice(currentPage, currentPage + 5);
+  // const filteredPokemon = (): Pokemon[] => {
+  //   // filtrode busqueda
+  //   if (search.length === 0)
+  //     return pokemons.slice(currentPage, currentPage + 5);
 
-    // si hay algo en la caja de texto
+  //   // si hay algo en la caja de texto
 
-    const filtered = pokemons.filter((poke) => poke.name.includes(search));
-    return filtered.slice(currentPage, currentPage + 5);
-  };
+  //   const filtered = pokemons.filter((poke) => poke.name.includes(search));
+  //   return filtered.slice(currentPage, currentPage + 5);
+  // };
+  const filteredItems = pokemons.filter((poke) => poke.name.includes(search));
 
   // const nextPage = () => {
   //   if (
@@ -161,7 +197,7 @@ export const HomePage = () => {
       <DataTable
         title="Presentación"
         columns={columns}
-        data={pokemons}
+        data={filteredItems}
         customStyles={customStyles}
         noHeader={true}
         progressPending={isLoading}
